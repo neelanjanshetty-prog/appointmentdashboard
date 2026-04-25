@@ -1,0 +1,16 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/_global-error/page": "/_global-error",
+  "/analytics/page": "/analytics",
+  "/appointments/page": "/appointments",
+  "/calendar/page": "/calendar",
+  "/dashboard/page": "/dashboard",
+  "/doctors/page": "/doctors",
+  "/inventory/page": "/inventory",
+  "/invoices/page": "/invoices",
+  "/page": "/",
+  "/patients/page": "/patients",
+  "/settings/page": "/settings",
+  "/signin/page": "/signin",
+  "/verify/page": "/verify"
+}
