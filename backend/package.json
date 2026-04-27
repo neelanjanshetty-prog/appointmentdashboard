@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Backend API for the Appointment Dashboard dental clinic SaaS.",
   "main": "server.js",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "postinstall": "node scripts/patchPackageExports.js",
     "start": "node server.js",

@@ -12,7 +12,6 @@ const doctorRoutes = require("./routes/doctorRoutes");
 const inventoryRoutes = require("./routes/inventoryRoutes");
 const invoiceRoutes = require("./routes/invoiceRoutes");
 const patientRoutes = require("./routes/patientRoutes");
-const prescriptionRoutes = require("./routes/prescriptionRoutes");
 const whatsappRoutes = require("./routes/whatsappRoutes");
 
 const { startReminderService } = require("./services/reminderService");
@@ -28,6 +27,21 @@ const allowedOrigins = (process.env.FRONTEND_URL || DEFAULT_FRONTEND_URL)
   .split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
+
+const loadOptionalRoute = (routePath, serviceName) => {
+  try {
+    return require(routePath);
+  } catch (error) {
+    if (error.code === "MODULE_NOT_FOUND" && error.message.toLowerCase().includes(serviceName.toLowerCase())) {
+      console.error(`${serviceName} route is unavailable: ${error.message}`);
+      return null;
+    }
+
+    throw error;
+  }
+};
+
+const prescriptionRoutes = loadOptionalRoute("./routes/prescriptionRoutes", "prescription");
 
 // Middleware
 app.use(cors({
@@ -60,7 +74,13 @@ app.get("/api/health", (req, res) => {
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/patients", patientRoutes);
-app.use("/api/prescriptions", prescriptionRoutes);
+if (prescriptionRoutes) {
+  app.use("/api/prescriptions", prescriptionRoutes);
+} else {
+  app.use("/api/prescriptions", (req, res) => {
+    return res.status(503).json(errorResponse("Prescription service is unavailable on this deployment"));
+  });
+}
 app.use("/api/doctors", doctorRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/whatsapp", whatsappRoutes);
@@ -89,18 +109,16 @@ app.use((err, req, res, next) => {
 
 // Start server
 const startServer = async () => {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+
   try {
     await connectDB();
     console.log("MongoDB connected");
-
     startReminderService();
-
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
-    });
   } catch (error) {
-    console.error(`Server startup error: ${error.message}`);
-    process.exit(1);
+    console.error(`Server started, but database connection failed:\n${error.message}`);
   }
 };
 

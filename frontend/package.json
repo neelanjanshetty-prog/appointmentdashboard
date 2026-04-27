@@ -2,13 +2,16 @@
   "name": "appointmentdashboard-frontend",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "postinstall": "node scripts/patchPackageExports.js",
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "next build --webpack"
   },
   "dependencies": {
     "axios": "^1.7.9",

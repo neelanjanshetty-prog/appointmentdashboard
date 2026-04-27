@@ -5,7 +5,7 @@ const connectDB = async () => {
     const mongoUri = process.env.MONGO_URI;
 
     if (!mongoUri) {
-      console.error(
+      throw new Error(
         [
           "MongoDB connection error: MONGO_URI is missing.",
           "Create backend/.env and set MONGO_URI.",
@@ -13,25 +13,22 @@ const connectDB = async () => {
           "MongoDB Atlas: paste your Atlas connection string into MONGO_URI."
         ].join("\n")
       );
-      process.exit(1);
     }
 
     const connection = await mongoose.connect(mongoUri);
     console.log(`MongoDB connected: ${connection.connection.host}`);
   } catch (error) {
     if (error.message.includes("ECONNREFUSED")) {
-      console.error(
+      throw new Error(
         [
           `MongoDB connection error: ${error.message}`,
           "MONGO_URI was found, but MongoDB is not reachable.",
           "Start your local MongoDB server, or replace MONGO_URI in backend/.env with a MongoDB Atlas connection string."
         ].join("\n")
       );
-      process.exit(1);
     }
 
-    console.error(`MongoDB connection error: ${error.message}`);
-    process.exit(1);
+    throw new Error(`MongoDB connection error: ${error.message}`);
   }
 };
 
