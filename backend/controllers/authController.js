@@ -40,7 +40,9 @@ const sendMagicLink = asyncHandler(async (req, res) => {
     { expiresIn: "10m" }
   );
 
-  const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+  const frontendUrl =
+    process.env.FRONTEND_URL ||
+    (process.env.NODE_ENV === "production" ? "https://admin.paramsdental.com" : "http://localhost:3000");
   const loginLink = `${frontendUrl.replace(/\/$/, "")}/verify?token=${encodeURIComponent(token)}`;
 
   await sendMagicLoginEmail(normalizedEmail, loginLink);

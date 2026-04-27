@@ -12,6 +12,7 @@ const doctorRoutes = require("./routes/doctorRoutes");
 const inventoryRoutes = require("./routes/inventoryRoutes");
 const invoiceRoutes = require("./routes/invoiceRoutes");
 const patientRoutes = require("./routes/patientRoutes");
+const prescriptionRoutes = require("./routes/prescriptionRoutes");
 const whatsappRoutes = require("./routes/whatsappRoutes");
 
 const { startReminderService } = require("./services/reminderService");
@@ -21,10 +22,22 @@ dotenv.config({ path: path.join(__dirname, ".env") });
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const DEFAULT_FRONTEND_URL =
+  process.env.NODE_ENV === "production" ? "https://admin.paramsdental.com" : "http://localhost:3000";
+const allowedOrigins = (process.env.FRONTEND_URL || DEFAULT_FRONTEND_URL)
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Not allowed by CORS"));
+  },
   credentials: true
 }));
 
@@ -41,15 +54,13 @@ app.get("/", (req, res) => {
 
 // Health route
 app.get("/api/health", (req, res) => {
-  return res.status(200).json({
-    success: true,
-    message: "API is running properly 🚀"
-  });
+  return res.status(200).json({ status: "ok", service: "appointmentdashboard-backend" });
 });
 
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/patients", patientRoutes);
+app.use("/api/prescriptions", prescriptionRoutes);
 app.use("/api/doctors", doctorRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/whatsapp", whatsappRoutes);
