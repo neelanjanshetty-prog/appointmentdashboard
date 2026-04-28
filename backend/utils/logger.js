@@ -55,14 +55,7 @@ const write = (level, message, meta = {}) => {
     ...redact(meta)
   };
 
-  const line = JSON.stringify(entry);
-
-  if (level === "error") {
-    process.stderr.write(`${line}\n`);
-    return;
-  }
-
-  process.stdout.write(`${line}\n`);
+  console.log(JSON.stringify(entry));
 };
 
 const logger = {
