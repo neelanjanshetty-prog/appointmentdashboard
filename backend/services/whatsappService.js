@@ -19,7 +19,7 @@ const formatIndianPhoneNumber = (phone) => {
 };
 
 const getWhatsAppApiUrl = () =>
-  `https://graph.facebook.com/v19.0/${process.env.WHATSAPP_PHONE_ID}/messages`;
+  `https://graph.facebook.com/${process.env.WHATSAPP_API_VERSION || "v19.0"}/${process.env.WHATSAPP_PHONE_ID}/messages`;
 
 const sendWhatsAppMessage = async (phone, message) => {
   const formattedPhone = formatIndianPhoneNumber(phone);
@@ -35,7 +35,8 @@ const sendWhatsAppMessage = async (phone, message) => {
       message
     });
     return {
-      skipped: true
+      skipped: true,
+      reason: "WHATSAPP_TOKEN or WHATSAPP_PHONE_ID is missing"
     };
   }
 
