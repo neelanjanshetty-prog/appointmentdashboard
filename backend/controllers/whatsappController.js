@@ -5,12 +5,13 @@ const Patient = require("../models/Patient");
 const asyncHandler = require("../utils/asyncHandler");
 const { getDayName, normalizeDate } = require("../utils/dateUtils");
 const { formatIndianPhoneNumber, sendWhatsAppMessage } = require("../services/whatsappService");
+const logger = require("../utils/logger");
 
 const sendSafely = async (phone, message) => {
   try {
     await sendWhatsAppMessage(phone, message);
   } catch (error) {
-    console.error(`WhatsApp webhook send failed: ${error.message}`);
+    logger.warn("WhatsApp webhook send failed", { error, phone });
   }
 };
 
