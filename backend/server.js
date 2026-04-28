@@ -4,6 +4,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 
 const connectDB = require("./utils/db");
+const logger = require("./utils/logger");
+const requestLogger = require("./middleware/requestLogger");
 
 const analyticsRoutes = require("./routes/analyticsRoutes");
 const appointmentRoutes = require("./routes/appointmentRoutes");
@@ -17,7 +19,7 @@ const whatsappRoutes = require("./routes/whatsappRoutes");
 const { startReminderService } = require("./services/reminderService");
 const { errorResponse } = require("./utils/apiResponse");
 
-dotenv.config({ path: path.join(__dirname, ".env") });
+dotenv.config({ path: path.join(__dirname, ".env"), quiet: true });
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -33,7 +35,7 @@ const loadOptionalRoute = (routePath, serviceName) => {
     return require(routePath);
   } catch (error) {
     if (error.code === "MODULE_NOT_FOUND" && error.message.toLowerCase().includes(serviceName.toLowerCase())) {
-      console.error(`${serviceName} route is unavailable: ${error.message}`);
+      logger.warn(`${serviceName} route is unavailable`, { error });
       return null;
     }
 
@@ -44,6 +46,7 @@ const loadOptionalRoute = (routePath, serviceName) => {
 const prescriptionRoutes = loadOptionalRoute("./routes/prescriptionRoutes", "prescription");
 
 // Middleware
+app.use(requestLogger);
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -95,14 +98,23 @@ app.use((req, res) => {
 
 // Error handler
 app.use((err, req, res, next) => {
-  console.error("ERROR:", err);
-
   const statusCode = err.statusCode || 500;
+  const requestId = req.requestId;
+
+  if (!err.logged) {
+    logger.error("Unhandled request error", {
+      requestId,
+      method: req.method,
+      path: req.originalUrl,
+      statusCode,
+      error: err
+    });
+  }
 
   return res.status(statusCode).json(
     errorResponse(
       err.message || "Internal server error",
-      process.env.NODE_ENV === "production" ? null : err.stack
+      process.env.NODE_ENV === "production" ? { requestId } : { requestId, stack: err.stack }
     )
   );
 });
@@ -110,17 +122,31 @@ app.use((err, req, res, next) => {
 // Start server
 const startServer = async () => {
   app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    logger.info("Server running", {
+      port: PORT,
+      env: process.env.NODE_ENV || "development",
+      allowedOrigins
+    });
   });
 
   try {
     await connectDB();
-    console.log("MongoDB connected");
     startReminderService();
   } catch (error) {
-    console.error(`Server started, but database connection failed:\n${error.message}`);
+    logger.error("Server started, but database connection failed", { error });
   }
 };
+
+process.on("unhandledRejection", (reason) => {
+  logger.error("Unhandled promise rejection", {
+    error: reason instanceof Error ? reason : new Error(String(reason))
+  });
+});
+
+process.on("uncaughtException", (error) => {
+  logger.error("Uncaught exception", { error });
+  process.exit(1);
+});
 
 if (require.main === module) {
   startServer();

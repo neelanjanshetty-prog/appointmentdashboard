@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const logger = require("./logger");
 
 const connectDB = async () => {
   try {
@@ -16,8 +17,13 @@ const connectDB = async () => {
     }
 
     const connection = await mongoose.connect(mongoUri);
-    console.log(`MongoDB connected: ${connection.connection.host}`);
+    logger.info("MongoDB connected", {
+      host: connection.connection.host,
+      database: connection.connection.name
+    });
   } catch (error) {
+    logger.error("MongoDB connection failed", { error });
+
     if (error.message.includes("ECONNREFUSED")) {
       throw new Error(
         [

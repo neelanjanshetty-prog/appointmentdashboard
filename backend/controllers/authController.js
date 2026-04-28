@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const asyncHandler = require("../utils/asyncHandler");
 const { successResponse, errorResponse } = require("../utils/apiResponse");
+const logger = require("../utils/logger");
 const { sendMagicLoginEmail } = require("../services/emailService");
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -62,10 +63,19 @@ const verifyMagicLink = asyncHandler(async (req, res) => {
   try {
     decoded = jwt.verify(token, getJwtSecret());
   } catch (error) {
+    logger.warn("Magic login token verification failed", {
+      requestId: req.requestId,
+      error
+    });
     return res.status(401).json(errorResponse("Invalid or expired token"));
   }
 
   if (decoded.purpose !== "magic_login" || !decoded.email) {
+    logger.warn("Magic login token payload is invalid", {
+      requestId: req.requestId,
+      purpose: decoded.purpose,
+      hasEmail: Boolean(decoded.email)
+    });
     return res.status(401).json(errorResponse("Invalid token"));
   }
 

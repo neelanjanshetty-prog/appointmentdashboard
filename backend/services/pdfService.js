@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const PDFDocument = require("pdfkit");
+const logger = require("../utils/logger");
 
 const invoicesDir = path.join(__dirname, "..", "uploads", "invoices");
 
@@ -9,7 +10,17 @@ const formatCurrency = (amount) => `Rs. ${Number(amount || 0).toFixed(2)}`;
 
 const generateInvoicePdf = (invoice) =>
   new Promise((resolve, reject) => {
-    fs.mkdirSync(invoicesDir, { recursive: true });
+    try {
+      fs.mkdirSync(invoicesDir, { recursive: true });
+    } catch (error) {
+      logger.error("Invoice PDF directory creation failed", {
+        invoiceId: invoice?._id,
+        invoicesDir,
+        error
+      });
+      reject(error);
+      return;
+    }
 
     const filename = `invoice-${invoice._id}.pdf`;
     const absolutePath = path.join(invoicesDir, filename);
@@ -17,9 +28,28 @@ const generateInvoicePdf = (invoice) =>
     const doc = new PDFDocument({ margin: 48 });
     const stream = fs.createWriteStream(absolutePath);
 
-    stream.on("finish", () => resolve({ absolutePath, relativePath }));
-    stream.on("error", reject);
-    doc.on("error", reject);
+    stream.on("finish", () => {
+      logger.info("Invoice PDF generated", {
+        invoiceId: invoice?._id,
+        relativePath
+      });
+      resolve({ absolutePath, relativePath });
+    });
+    stream.on("error", (error) => {
+      logger.error("Invoice PDF stream failed", {
+        invoiceId: invoice?._id,
+        absolutePath,
+        error
+      });
+      reject(error);
+    });
+    doc.on("error", (error) => {
+      logger.error("Invoice PDF generation failed", {
+        invoiceId: invoice?._id,
+        error
+      });
+      reject(error);
+    });
 
     doc.pipe(stream);
 
