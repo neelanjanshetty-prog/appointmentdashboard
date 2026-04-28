@@ -24,7 +24,7 @@ dotenv.config({ path: path.join(__dirname, ".env"), quiet: true });
 const app = express();
 const PORT = process.env.PORT || 5000;
 const DEFAULT_FRONTEND_URL =
-  process.env.NODE_ENV === "production" ? "https://admin.paramsdental.com" : "http://localhost:3000";
+  process.env.NODE_ENV === "production" ? "https://admin.paramsdental.com" : "http://localhos:3000";
 const allowedOrigins = (process.env.FRONTEND_URL || DEFAULT_FRONTEND_URL)
   .split(",")
   .map((origin) => origin.trim())
@@ -121,7 +121,7 @@ app.use((err, req, res, next) => {
 
 // Start server
 const startServer = async () => {
-  app.listen(PORT, () => {
+  app.listen(PORT,'0.0.0.0', () => {
     logger.info("Server running", {
       port: PORT,
       env: process.env.NODE_ENV || "development",
