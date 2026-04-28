@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
 const { errorResponse } = require("../utils/apiResponse");
+const logger = require("../utils/logger");
 
 const protect = async (req, res, next) => {
   try {
@@ -28,9 +29,17 @@ const protect = async (req, res, next) => {
     return next();
   } catch (error) {
     if (error.name === "JsonWebTokenError" || error.name === "TokenExpiredError") {
+      logger.warn("Authorization token validation failed", {
+        requestId: req.requestId,
+        error
+      });
       return res.status(401).json(errorResponse("Invalid or expired authorization token"));
     }
 
+    logger.error("Authentication middleware failed", {
+      requestId: req.requestId,
+      error
+    });
     return next(error);
   }
 };

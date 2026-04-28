@@ -2,6 +2,7 @@ const cron = require("node-cron");
 
 const Appointment = require("../models/Appointment");
 const { getDayName } = require("../utils/dateUtils");
+const logger = require("../utils/logger");
 const { sendWhatsAppMessage } = require("./whatsappService");
 
 let reminderJob = null;
@@ -12,7 +13,7 @@ const sendReminderSafely = async (phone, message) => {
   try {
     await sendWhatsAppMessage(phone, message);
   } catch (error) {
-    console.error(`Reminder WhatsApp failed: ${error.message}`);
+    logger.warn("Reminder WhatsApp failed", { error, phone });
   }
 };
 
@@ -65,11 +66,11 @@ const startReminderService = () => {
 
   reminderJob = cron.schedule("* * * * *", () => {
     processAppointmentReminders().catch((error) => {
-      console.error(`Reminder service error: ${error.message}`);
+      logger.error("Reminder service error", { error });
     });
   });
 
-  console.log("Reminder service started.");
+  logger.info("Reminder service started");
   return reminderJob;
 };
 

@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const logger = require("../utils/logger");
 
 const nodeModulesPath = path.join(__dirname, "..", "node_modules");
 
@@ -48,4 +49,4 @@ const patchPackagesIn = (dir) => {
 };
 
 patchPackagesIn(nodeModulesPath);
-console.log("Patched dependency package exports for literal-backslash install path.");
+logger.info("Patched dependency package exports for literal-backslash install path");

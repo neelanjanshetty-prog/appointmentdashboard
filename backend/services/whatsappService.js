@@ -1,4 +1,5 @@
 const axios = require("axios");
+const logger = require("../utils/logger");
 
 const formatIndianPhoneNumber = (phone) => {
   if (!phone) {
@@ -25,15 +26,12 @@ const sendWhatsAppMessage = async (phone, message) => {
   const formattedPhone = formatIndianPhoneNumber(phone);
 
   if (!formattedPhone) {
-    console.log("WhatsApp message skipped. Phone number is missing.", { phone, message });
+    logger.warn("WhatsApp message skipped because phone number is missing", { phone });
     return { skipped: true };
   }
 
   if (!process.env.WHATSAPP_TOKEN || !process.env.WHATSAPP_PHONE_ID) {
-    console.log("WhatsApp message skipped. WHATSAPP_TOKEN or WHATSAPP_PHONE_ID is missing.", {
-      phone: formattedPhone,
-      message
-    });
+    logger.warn("WhatsApp message skipped because configuration is missing", { phone: formattedPhone });
     return {
       skipped: true
     };
@@ -61,7 +59,11 @@ const sendWhatsAppMessage = async (phone, message) => {
 
     return response.data;
   } catch (error) {
-    console.error("WhatsApp API error:", error.response?.data || error.message);
+    logger.error("WhatsApp API error", {
+      phone: formattedPhone,
+      error,
+      response: error.response?.data
+    });
     return {
       failed: true,
       error: error.response?.data || error.message

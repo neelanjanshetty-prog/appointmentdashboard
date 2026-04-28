@@ -7,6 +7,7 @@ const asyncHandler = require("../utils/asyncHandler");
 const { successResponse, errorResponse } = require("../utils/apiResponse");
 const { getDayName, normalizeDate } = require("../utils/dateUtils");
 const { sendWhatsAppMessage } = require("../services/whatsappService");
+const logger = require("../utils/logger");
 
 const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
 
@@ -20,7 +21,7 @@ const sendWhatsAppSafely = async (phone, message) => {
   try {
     await sendWhatsAppMessage(phone, message);
   } catch (error) {
-    console.error(`WhatsApp send failed: ${error.message}`);
+    logger.warn("WhatsApp send failed during appointment workflow", { error, phone });
   }
 };
 
