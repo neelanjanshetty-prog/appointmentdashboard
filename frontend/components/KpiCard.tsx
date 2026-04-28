@@ -20,7 +20,7 @@ export function KpiCard({
     >
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-slate-500 dark:text-slate-400">{label}</p>
+          <p className="text-sm text-slate-500 dark:text-slate-200">{label}</p>
           <p className="mt-2 text-2xl font-bold text-slate-950 dark:text-white">{value}</p>
         </div>
         <div className="rounded-2xl bg-blue-600 p-3 text-white">

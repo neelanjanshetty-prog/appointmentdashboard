@@ -51,13 +51,30 @@ export type Appointment = {
 
 export type Invoice = {
   _id: string;
+  invoiceNo?: string;
+  patientId?: string | Patient;
   patientName: string;
   patientPhone: string;
-  services: Array<{ name: string; price: number }>;
+  services: Array<{ name?: string; service?: string; price: number }>;
   discount: number;
   subtotal: number;
+  totalAmount?: number;
+  amountPaid?: number;
+  previousBalance?: number;
+  totalPaid?: number;
+  balanceDue?: number;
+  advancePaid?: number;
+  paymentStatus?: "Paid" | "Partially Paid" | "Unpaid";
   total: number;
   paymentMode?: string;
+  notes?: string;
+  payments?: Array<{
+    amount: number;
+    paymentMode?: string;
+    paymentDate?: string;
+    note?: string;
+    receivedBy?: string;
+  }>;
   pdfPath?: string;
   createdAt?: string;
 };
@@ -70,6 +87,41 @@ export type InventoryItem = {
   supplier?: string;
   lowStockThreshold: number;
   createdAt?: string;
+};
+
+export type PrescriptionMedicine = {
+  medicineName: string;
+  strength?: string;
+  dosageForm?: string;
+  dose?: string;
+  frequency?: string;
+  duration?: string;
+  instructions?: string;
+};
+
+export type Prescription = {
+  _id: string;
+  prescriptionNo: string;
+  date: string;
+  patientId: string | Patient;
+  appointmentId?: string | Partial<Appointment>;
+  patientName: string;
+  patientAge?: string;
+  patientGender?: string;
+  patientPhone?: string;
+  doctorId: string | Doctor;
+  doctorName: string;
+  doctorQualification?: string;
+  doctorRegistrationNo?: string;
+  chiefComplaint?: string;
+  diagnosis?: string;
+  treatmentNotes?: string;
+  medicines: PrescriptionMedicine[];
+  specialInstructions?: string;
+  followUpDate?: string;
+  createdBy?: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type AnalyticsOverview = {

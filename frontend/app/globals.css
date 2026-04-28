@@ -4,10 +4,20 @@
 
 :root {
   color-scheme: light;
+  --chart-axis: #64748b;
+  --chart-grid: rgba(148, 163, 184, 0.34);
+  --chart-tooltip-bg: rgba(255, 255, 255, 0.96);
+  --chart-tooltip-border: rgba(203, 213, 225, 0.9);
+  --chart-tooltip-text: #0f172a;
 }
 
 .dark {
   color-scheme: dark;
+  --chart-axis: #cbd5e1;
+  --chart-grid: rgba(148, 163, 184, 0.26);
+  --chart-tooltip-bg: rgba(15, 23, 42, 0.96);
+  --chart-tooltip-border: rgba(255, 255, 255, 0.16);
+  --chart-tooltip-text: #f8fafc;
 }
 
 * {

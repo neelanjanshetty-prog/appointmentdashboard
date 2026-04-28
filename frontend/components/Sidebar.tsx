@@ -8,11 +8,13 @@ import {
   ClipboardList,
   FileText,
   LayoutDashboard,
+  Pill,
   Package,
   Settings,
   Stethoscope,
   Users
 } from "lucide-react";
+import { ClinicLogo } from "@/components/ClinicLogo";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -22,6 +24,7 @@ const navItems = [
   { label: "Appointments", href: "/appointments", icon: ClipboardList },
   { label: "Calendar", href: "/calendar", icon: CalendarDays },
   { label: "Invoices", href: "/invoices", icon: FileText },
+  { label: "Digital Prescription", href: "/prescriptions", icon: Pill },
   { label: "Inventory", href: "/inventory", icon: Package },
   { label: "Analytics", href: "/analytics", icon: Activity },
   { label: "Settings", href: "/settings", icon: Settings }
@@ -34,12 +37,12 @@ export function Sidebar() {
     <aside className="hidden h-screen w-72 shrink-0 p-4 lg:block">
       <div className="glass-panel flex h-full flex-col rounded-2xl p-4">
         <Link href="/dashboard" className="flex items-center gap-3 px-2 py-3">
-          <div className="grid h-11 w-11 place-items-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-600/25">
-            <Stethoscope className="h-5 w-5" />
+          <div className="grid h-12 w-12 place-items-center rounded-2xl bg-white p-1.5 shadow-lg shadow-blue-600/20">
+            <ClinicLogo />
           </div>
           <div>
             <p className="font-bold text-slate-950 dark:text-white">Params Dental</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Clinic OS</p>
+            <p className="text-xs text-slate-500 dark:text-slate-200">Clinic OS</p>
           </div>
         </Link>
 

@@ -16,7 +16,7 @@ export function PageHeader({
       <div>
         {badge ? <Badge>{badge}</Badge> : null}
         <h2 className="mt-3 text-2xl font-bold text-slate-950 dark:text-white">{title}</h2>
-        <p className="mt-2 max-w-2xl text-sm text-slate-500 dark:text-slate-400">{description}</p>
+        <p className="mt-2 max-w-2xl text-sm text-slate-500 dark:text-slate-200">{description}</p>
       </div>
       {action ? <div className="flex shrink-0 items-center gap-2">{action}</div> : null}
     </div>

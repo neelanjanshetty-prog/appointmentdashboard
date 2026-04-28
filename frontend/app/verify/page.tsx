@@ -38,7 +38,7 @@ function VerifyContent() {
   return (
     <main className="grid min-h-screen place-items-center px-4">
       <div className="glass-panel w-full max-w-md rounded-2xl p-8 text-center">
-        {status === "loading" ? <Loader2 className="mx-auto h-10 w-10 animate-spin text-blue-600" /> : null}
+        {status === "loading" ? <Loader2 className="mx-auto h-10 w-10 animate-spin text-blue-600 dark:text-white" /> : null}
         {status === "success" ? <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-500" /> : null}
         {status === "error" ? <XCircle className="mx-auto h-10 w-10 text-rose-500" /> : null}
         <h1 className="mt-5 text-xl font-bold text-slate-950 dark:text-white">
@@ -46,7 +46,7 @@ function VerifyContent() {
           {status === "success" && "Login verified"}
           {status === "error" && "Verification failed"}
         </h1>
-        <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mt-2 text-sm text-slate-500 dark:text-slate-200">
           {status === "loading" && "Please wait while we secure your dashboard session."}
           {status === "success" && "Redirecting to your dashboard."}
           {status === "error" && "This link may be invalid or expired."}

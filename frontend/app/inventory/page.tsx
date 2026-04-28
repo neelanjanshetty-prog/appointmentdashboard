@@ -9,6 +9,7 @@ import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { DataTable, type DataTableColumn } from "@/components/DataTable";
 import { EmptyState } from "@/components/EmptyState";
 import { FormInput } from "@/components/FormInput";
+import { IconButton } from "@/components/IconButton";
 import { KpiCard } from "@/components/KpiCard";
 import { Modal } from "@/components/Modal";
 import { PageHeader } from "@/components/PageHeader";
@@ -135,8 +136,12 @@ export default function InventoryPage() {
       className: "text-right",
       cell: (item) => (
         <div className="flex justify-end gap-2">
-          <Button variant="ghost" className="h-9 w-9 px-0" onClick={() => setEditing(item)}><UserPen className="h-4 w-4" /></Button>
-          <Button variant="ghost" className="h-9 w-9 px-0 text-rose-600" onClick={() => setDeleting(item)}><Trash2 className="h-4 w-4" /></Button>
+          <IconButton onClick={() => setEditing(item)} aria-label="Edit inventory item" title="Edit item">
+            <UserPen className="h-5 w-5" />
+          </IconButton>
+          <IconButton tone="danger" onClick={() => setDeleting(item)} aria-label="Delete inventory item" title="Delete item">
+            <Trash2 className="h-5 w-5" />
+          </IconButton>
         </div>
       )
     }

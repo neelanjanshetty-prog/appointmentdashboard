@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Activity, AlertTriangle, BarChart3, IndianRupee, MessageCircle, Package, TrendingUp, Users } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { AppShell } from "@/components/AppShell";
+import { chartAxisProps, chartGridProps, chartTooltipProps } from "@/components/chartTheme";
 import { EmptyState } from "@/components/EmptyState";
 import { KpiCard } from "@/components/KpiCard";
 import { PageHeader } from "@/components/PageHeader";
@@ -60,10 +61,10 @@ export default function AnalyticsPage() {
             <ChartPanel title="Monthly patient flow">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={objectToChart(analytics.monthlyPatientFlow, "patients")}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip />
+                  <CartesianGrid strokeDasharray="3 3" {...chartGridProps} />
+                  <XAxis dataKey="name" {...chartAxisProps} />
+                  <YAxis allowDecimals={false} {...chartAxisProps} />
+                  <Tooltip {...chartTooltipProps} />
                   <Line dataKey="patients" stroke="#2563eb" strokeWidth={3} />
                 </LineChart>
               </ResponsiveContainer>
@@ -71,10 +72,10 @@ export default function AnalyticsPage() {
             <ChartPanel title="Monthly revenue">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={objectToChart(analytics.monthlyRevenue, "revenue")}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
+                  <CartesianGrid strokeDasharray="3 3" {...chartGridProps} />
+                  <XAxis dataKey="name" {...chartAxisProps} />
+                  <YAxis {...chartAxisProps} />
+                  <Tooltip {...chartTooltipProps} />
                   <Bar dataKey="revenue" fill="#059669" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -90,10 +91,10 @@ export default function AnalyticsPage() {
                     { name: "Declined FU", value: analytics.declinedFollowUps }
                   ]}
                 >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip />
+                  <CartesianGrid strokeDasharray="3 3" {...chartGridProps} />
+                  <XAxis dataKey="name" {...chartAxisProps} />
+                  <YAxis allowDecimals={false} {...chartAxisProps} />
+                  <Tooltip {...chartTooltipProps} />
                   <Bar dataKey="value" fill="#7c3aed" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -101,10 +102,10 @@ export default function AnalyticsPage() {
             <ChartPanel title="Treatment-wise follow-up count">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={objectToChart(analytics.treatmentWiseFollowUps, "followUps")}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip />
+                  <CartesianGrid strokeDasharray="3 3" {...chartGridProps} />
+                  <XAxis dataKey="name" {...chartAxisProps} />
+                  <YAxis allowDecimals={false} {...chartAxisProps} />
+                  <Tooltip {...chartTooltipProps} />
                   <Bar dataKey="followUps" fill="#1d4ed8" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -112,10 +113,10 @@ export default function AnalyticsPage() {
             <ChartPanel title="Doctor-wise confirmed follow-ups">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={objectToChart(analytics.doctorWiseConfirmedFollowUps, "confirmed")}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip />
+                  <CartesianGrid strokeDasharray="3 3" {...chartGridProps} />
+                  <XAxis dataKey="name" {...chartAxisProps} />
+                  <YAxis allowDecimals={false} {...chartAxisProps} />
+                  <Tooltip {...chartTooltipProps} />
                   <Bar dataKey="confirmed" fill="#0f766e" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -123,10 +124,10 @@ export default function AnalyticsPage() {
             <ChartPanel title="Treatment-wise confirmation rate">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={analytics.treatmentWiseConfirmationRate.map((item) => ({ name: item.treatment, rate: item.rate }))}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
+                  <CartesianGrid strokeDasharray="3 3" {...chartGridProps} />
+                  <XAxis dataKey="name" {...chartAxisProps} />
+                  <YAxis {...chartAxisProps} />
+                  <Tooltip {...chartTooltipProps} />
                   <Bar dataKey="rate" fill="#f59e0b" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>

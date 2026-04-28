@@ -29,8 +29,8 @@ export function DataTable<T>({
   return (
     <div className="glass-panel overflow-hidden rounded-2xl">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[760px] border-collapse text-left text-sm">
-          <thead className="border-b border-slate-200/70 bg-slate-50/80 text-xs uppercase text-slate-500 dark:border-white/10 dark:bg-white/5 dark:text-slate-400">
+        <table className="w-full min-w-[760px] border-collapse text-left text-sm text-slate-700 dark:text-slate-200">
+          <thead className="border-b border-slate-200/70 bg-slate-50/80 text-xs uppercase text-slate-600 dark:border-white/10 dark:bg-white/10 dark:text-slate-200">
             <tr>
               {columns.map((column) => (
                 <th key={column.header} className={`px-4 py-3 font-semibold ${column.className || ""}`}>
@@ -41,7 +41,7 @@ export function DataTable<T>({
           </thead>
           <tbody className="divide-y divide-slate-200/70 dark:divide-white/10">
             {data.map((row, index) => (
-              <tr key={index} className="bg-white/45 transition hover:bg-white/80 dark:bg-transparent dark:hover:bg-white/5">
+              <tr key={index} className="bg-white/45 transition hover:bg-white/80 dark:bg-white/5 dark:hover:bg-white/10">
                 {columns.map((column) => (
                   <td key={column.header} className={`px-4 py-4 align-middle ${column.className || ""}`}>
                     {column.cell(row)}
@@ -52,7 +52,7 @@ export function DataTable<T>({
           </tbody>
         </table>
       </div>
-      <div className="flex items-center justify-between border-t border-slate-200/70 px-4 py-3 text-sm text-slate-500 dark:border-white/10 dark:text-slate-400">
+      <div className="flex items-center justify-between border-t border-slate-200/70 px-4 py-3 text-sm text-slate-500 dark:border-white/10 dark:text-slate-200">
         <span>
           Page {page} of {totalPages}
         </span>

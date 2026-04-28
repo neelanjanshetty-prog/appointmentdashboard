@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 type Toast = {
@@ -17,9 +17,11 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const nextToastId = useRef(0);
 
   const showToast = useCallback((message: string, type: Toast["type"] = "info") => {
-    const id = Date.now();
+    nextToastId.current += 1;
+    const id = nextToastId.current;
     setToasts((current) => [...current, { id, message, type }]);
     window.setTimeout(() => {
       setToasts((current) => current.filter((toast) => toast.id !== id));

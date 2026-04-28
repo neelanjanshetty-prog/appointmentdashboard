@@ -8,6 +8,7 @@ import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { DataTable, type DataTableColumn } from "@/components/DataTable";
 import { EmptyState } from "@/components/EmptyState";
 import { FormInput } from "@/components/FormInput";
+import { IconButton } from "@/components/IconButton";
 import { Modal } from "@/components/Modal";
 import { PageHeader } from "@/components/PageHeader";
 import { SkeletonLoader } from "@/components/SkeletonLoader";
@@ -144,12 +145,12 @@ export default function DoctorsPage() {
       className: "text-right",
       cell: (doctor) => (
         <div className="flex justify-end gap-2">
-          <Button variant="ghost" className="h-9 w-9 px-0" onClick={() => setEditing(doctor)} aria-label="Edit doctor">
-            <UserPen className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" className="h-9 w-9 px-0 text-rose-600" onClick={() => setDeleting(doctor)} aria-label="Delete doctor">
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          <IconButton onClick={() => setEditing(doctor)} aria-label="Edit doctor" title="Edit doctor">
+            <UserPen className="h-5 w-5" />
+          </IconButton>
+          <IconButton tone="danger" onClick={() => setDeleting(doctor)} aria-label="Delete doctor" title="Delete doctor">
+            <Trash2 className="h-5 w-5" />
+          </IconButton>
         </div>
       )
     }

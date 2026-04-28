@@ -55,7 +55,7 @@ export default function CalendarPage() {
                         <p className="font-semibold text-slate-950 dark:text-white">
                           {appointment.time} · {getPatient(appointment)?.name || "Patient"}
                         </p>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                        <p className="text-sm text-slate-500 dark:text-slate-200">
                           Dr. {getDoctor(appointment)?.name || "Doctor"} · {appointment.reason || appointment.followUpType || "Dental visit"}
                         </p>
                       </div>

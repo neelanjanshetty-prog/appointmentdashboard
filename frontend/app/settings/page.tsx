@@ -15,7 +15,7 @@ function SettingsCard({ title, description, icon: Icon, children }: { title: str
         </div>
         <div className="min-w-0 flex-1">
           <h3 className="font-semibold text-slate-950 dark:text-white">{title}</h3>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{description}</p>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-200">{description}</p>
           {children ? <div className="mt-4">{children}</div> : null}
         </div>
       </div>

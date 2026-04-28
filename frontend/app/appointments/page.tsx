@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { CalendarPlus, ClipboardList, Plus, Search, Trash2, UserPen } from "lucide-react";
+import { CalendarPlus, ClipboardList, Pill, Plus, Search, Trash2, UserPen } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { Badge } from "@/components/Badge";
 import { Button } from "@/components/Button";
@@ -9,6 +10,7 @@ import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { DataTable, type DataTableColumn } from "@/components/DataTable";
 import { EmptyState } from "@/components/EmptyState";
 import { FormInput } from "@/components/FormInput";
+import { IconButton } from "@/components/IconButton";
 import { Modal } from "@/components/Modal";
 import { PageHeader } from "@/components/PageHeader";
 import { SelectInput } from "@/components/SelectInput";
@@ -43,7 +45,7 @@ const blankFollowUp = {
 };
 
 const statusStyles: Record<AppointmentStatus, string> = {
-  booked: "bg-blue-50 text-blue-700 dark:bg-blue-400/10 dark:text-blue-200",
+  booked: "bg-blue-50 text-blue-700 dark:bg-blue-400/10 dark:text-white",
   pending_confirmation: "bg-yellow-50 text-yellow-700 dark:bg-yellow-400/10 dark:text-yellow-200",
   confirmed: "bg-emerald-50 text-emerald-700 dark:bg-emerald-400/10 dark:text-emerald-200",
   completed: "bg-purple-50 text-purple-700 dark:bg-purple-400/10 dark:text-purple-200",
@@ -369,13 +371,28 @@ export default function AppointmentsPage() {
       header: "Actions",
       className: "text-right",
       cell: (appointment) => (
-        <div className="flex justify-end gap-2">
-          <Button variant="ghost" className="h-9 w-9 px-0" onClick={() => setEditing(appointment)} aria-label="Edit appointment">
-            <UserPen className="h-4 w-4" />
+        <div className="flex flex-wrap justify-end gap-2">
+          <Button
+            variant="secondary"
+            className="h-10 px-3 text-blue-700 dark:text-white"
+            onClick={() => setFollowUpAppointment(appointment)}
+            aria-label="Schedule follow-up appointment"
+          >
+            <CalendarPlus className="h-4 w-4" />
+            Follow-up
           </Button>
-          <Button variant="ghost" className="h-9 w-9 px-0 text-rose-600" onClick={() => setDeleting(appointment)} aria-label="Delete appointment">
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          <Link href={`/prescriptions/new?appointmentId=${appointment._id}`}>
+            <Button variant="secondary" className="h-10 px-3" aria-label="Create prescription from appointment">
+              <Pill className="h-4 w-4" />
+              Prescription
+            </Button>
+          </Link>
+          <IconButton onClick={() => setEditing(appointment)} aria-label="Edit appointment" title="Edit appointment">
+            <UserPen className="h-5 w-5" />
+          </IconButton>
+          <IconButton tone="danger" onClick={() => setDeleting(appointment)} aria-label="Delete appointment" title="Delete appointment">
+            <Trash2 className="h-5 w-5" />
+          </IconButton>
         </div>
       )
     }
@@ -446,7 +463,7 @@ export default function AppointmentsPage() {
       <Modal open={Boolean(followUpAppointment)} title="Schedule next appointment?" onClose={() => setFollowUpAppointment(null)} maxWidth="max-w-2xl">
         {followUpAppointment ? (
           <div className="grid gap-4">
-            <div className="rounded-2xl bg-blue-50 p-4 text-sm text-blue-800 dark:bg-blue-400/10 dark:text-blue-200">
+            <div className="rounded-2xl bg-blue-50 p-4 text-sm text-blue-800 dark:bg-blue-400/10 dark:text-white">
               <div className="flex items-center gap-2 font-semibold">
                 <CalendarPlus className="h-4 w-4" />
                 Follow-up will remain pending until the patient replies YES on WhatsApp.

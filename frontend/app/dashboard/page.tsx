@@ -5,6 +5,7 @@ import { AlertTriangle, CalendarCheck, IndianRupee, MessageCircle, Package, Stet
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { AppShell } from "@/components/AppShell";
 import { Badge } from "@/components/Badge";
+import { chartAxisProps, chartGridProps, chartTooltipProps } from "@/components/chartTheme";
 import { EmptyState } from "@/components/EmptyState";
 import { KpiCard } from "@/components/KpiCard";
 import { PageHeader } from "@/components/PageHeader";
@@ -88,10 +89,10 @@ export default function DashboardPage() {
             <ChartPanel title="Patient growth">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={objectToChart(analytics.monthlyPatientFlow, "patients")}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip />
+                  <CartesianGrid strokeDasharray="3 3" {...chartGridProps} />
+                  <XAxis dataKey="name" {...chartAxisProps} />
+                  <YAxis allowDecimals={false} {...chartAxisProps} />
+                  <Tooltip {...chartTooltipProps} />
                   <Line type="monotone" dataKey="patients" stroke="#2563eb" strokeWidth={3} />
                 </LineChart>
               </ResponsiveContainer>
@@ -99,10 +100,10 @@ export default function DashboardPage() {
             <ChartPanel title="Appointments by status">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={appointmentStatusData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip />
+                  <CartesianGrid strokeDasharray="3 3" {...chartGridProps} />
+                  <XAxis dataKey="name" {...chartAxisProps} />
+                  <YAxis allowDecimals={false} {...chartAxisProps} />
+                  <Tooltip {...chartTooltipProps} />
                   <Bar dataKey="appointments" fill="#1d4ed8" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -110,10 +111,10 @@ export default function DashboardPage() {
             <ChartPanel title="Revenue trend">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={objectToChart(analytics.monthlyRevenue, "revenue")}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
+                  <CartesianGrid strokeDasharray="3 3" {...chartGridProps} />
+                  <XAxis dataKey="name" {...chartAxisProps} />
+                  <YAxis {...chartAxisProps} />
+                  <Tooltip {...chartTooltipProps} />
                   <Line type="monotone" dataKey="revenue" stroke="#059669" strokeWidth={3} />
                 </LineChart>
               </ResponsiveContainer>
@@ -127,10 +128,10 @@ export default function DashboardPage() {
                     { name: "Declined", value: analytics.declinedFollowUps }
                   ]}
                 >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip />
+                  <CartesianGrid strokeDasharray="3 3" {...chartGridProps} />
+                  <XAxis dataKey="name" {...chartAxisProps} />
+                  <YAxis allowDecimals={false} {...chartAxisProps} />
+                  <Tooltip {...chartTooltipProps} />
                   <Bar dataKey="value" fill="#7c3aed" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -145,7 +146,7 @@ export default function DashboardPage() {
                   recentAppointments.map((appointment) => (
                     <div key={appointment._id} className="rounded-xl bg-white/60 p-3 text-sm dark:bg-white/5">
                       <p className="font-semibold text-slate-950 dark:text-white">{getPatient(appointment)?.name || "Patient"}</p>
-                      <p className="text-slate-500 dark:text-slate-400">
+                      <p className="text-slate-500 dark:text-slate-200">
                         Dr. {getDoctor(appointment)?.name || "Doctor"} · {appointment.date} · {appointment.time}
                       </p>
                     </div>

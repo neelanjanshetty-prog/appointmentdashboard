@@ -34,8 +34,13 @@ export function Modal({
           >
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-slate-950 dark:text-white">{title}</h2>
-              <Button variant="ghost" className="h-9 w-9 px-0" onClick={onClose} aria-label="Close modal">
-                <X className="h-4 w-4" />
+              <Button
+                variant="ghost"
+                className="h-12 w-12 rounded-2xl bg-white px-0 text-slate-900 shadow-lg hover:bg-slate-100 hover:text-slate-950 dark:bg-white/20 dark:text-white dark:hover:bg-white/30"
+                onClick={onClose}
+                aria-label="Close modal"
+              >
+                <X className="h-6 w-6" />
               </Button>
             </div>
             <div className="mt-5">{children}</div>
