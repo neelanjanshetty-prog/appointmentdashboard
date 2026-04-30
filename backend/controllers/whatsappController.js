@@ -1,3 +1,5 @@
+const crypto = require("crypto");
+
 const Appointment = require("../models/Appointment");
 const ChatSession = require("../models/ChatSession");
 const Doctor = require("../models/Doctor");
@@ -17,7 +19,7 @@ const sendSafely = async (phone, message) => {
 const extractIncomingMessage = (body) => {
   const message = body?.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
 
-  if (!message) {
+  if (!message || message.type !== "text") {
     return null;
   }
 
@@ -25,6 +27,32 @@ const extractIncomingMessage = (body) => {
     phone: formatIndianPhoneNumber(message.from),
     text: (message.text?.body || "").trim()
   };
+};
+
+const extractWebhookStatus = (body) => body?.entry?.[0]?.changes?.[0]?.value?.statuses?.[0] || null;
+
+const isValidMetaSignature = (req) => {
+  const appSecret = process.env.META_APP_SECRET;
+
+  if (!appSecret) {
+    return true;
+  }
+
+  const signature = req.get("x-hub-signature-256");
+
+  if (!signature || !req.rawBody) {
+    return false;
+  }
+
+  const expectedSignature = `sha256=${crypto
+    .createHmac("sha256", appSecret)
+    .update(req.rawBody)
+    .digest("hex")}`;
+
+  const signatureBuffer = Buffer.from(signature);
+  const expectedBuffer = Buffer.from(expectedSignature);
+
+  return signatureBuffer.length === expectedBuffer.length && crypto.timingSafeEqual(signatureBuffer, expectedBuffer);
 };
 
 const getPhoneCandidates = (phone) => {
@@ -280,9 +308,24 @@ const verifyWebhook = (req, res) => {
 };
 
 const receiveWebhook = asyncHandler(async (req, res) => {
+  if (!isValidMetaSignature(req)) {
+    return res.sendStatus(403);
+  }
+
   const incoming = extractIncomingMessage(req.body);
 
   if (!incoming?.phone) {
+    const status = extractWebhookStatus(req.body);
+
+    if (status) {
+      console.log("WhatsApp status update received", {
+        id: status.id,
+        recipientId: status.recipient_id,
+        status: status.status,
+        timestamp: status.timestamp
+      });
+    }
+
     return res.sendStatus(200);
   }
 

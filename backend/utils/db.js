@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
+    console.log("Attempting to connect to MongoDB...");
+
     const mongoUri = process.env.MONGO_URI;
 
     if (!mongoUri) {

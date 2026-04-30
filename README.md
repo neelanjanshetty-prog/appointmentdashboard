@@ -58,7 +58,9 @@ EMAIL_USER=
 EMAIL_PASS=
 WHATSAPP_TOKEN=
 WHATSAPP_PHONE_ID=
+WHATSAPP_API_VERSION=v19.0
 WHATSAPP_VERIFY_TOKEN=clinic_verify_token
+META_APP_SECRET=
 CLINIC_WHATSAPP_NUMBER=
 ```
 
@@ -114,7 +116,9 @@ EMAIL_USER=
 EMAIL_PASS=
 WHATSAPP_TOKEN=
 WHATSAPP_PHONE_ID=
+WHATSAPP_API_VERSION=v19.0
 WHATSAPP_VERIFY_TOKEN=clinic_verify_token
+META_APP_SECRET=
 CLINIC_WHATSAPP_NUMBER=
 ```
 
@@ -123,7 +127,7 @@ For MongoDB Atlas, replace `MONGO_URI` with the Atlas connection string from you
 Frontend `.env.local`:
 
 ```bash
-NEXT_PUBLIC_API_URL=http://localhost:5000
+NEXT_PUBLIC_API_URL=http://localhost:5001
 ```
 
 ## WhatsApp Setup
@@ -138,7 +142,9 @@ Required values:
 
 - `WHATSAPP_TOKEN`
 - `WHATSAPP_PHONE_ID`
+- `WHATSAPP_API_VERSION`
 - `WHATSAPP_VERIFY_TOKEN`
+- `META_APP_SECRET`
 - `CLINIC_WHATSAPP_NUMBER`
 
 Webhook endpoints:
@@ -146,9 +152,12 @@ Webhook endpoints:
 ```bash
 GET  /api/whatsapp/webhook
 POST /api/whatsapp/webhook
+GET  /api/meta/webhook
+POST /api/meta/webhook
 ```
 
 Set the Meta webhook verify token to the same value as `WHATSAPP_VERIFY_TOKEN`.
+Set `META_APP_SECRET` to your Meta app secret to enable `X-Hub-Signature-256` validation on incoming webhook events.
 
 ## Email Setup
 

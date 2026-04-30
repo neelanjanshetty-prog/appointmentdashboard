@@ -1,3 +1,5 @@
+console.log("--- STARTING APP ---");
+
 const path = require("path");
 const express = require("express");
 const cors = require("cors");
@@ -20,13 +22,19 @@ const { errorResponse } = require("./utils/apiResponse");
 dotenv.config({ path: path.join(__dirname, ".env") });
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-const DEFAULT_FRONTEND_URL =
-  process.env.NODE_ENV === "production" ? "https://admin.paramsdental.com" : "http://localhost:3000";
-const allowedOrigins = (process.env.FRONTEND_URL || DEFAULT_FRONTEND_URL)
+const PORT = process.env.PORT || 5001;
+const DEFAULT_ALLOWED_ORIGINS = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "https://admin.paramsdental.com",
+  "https://paramsdental.com",
+  "https://www.paramsdental.com"
+];
+const configuredOrigins = (process.env.FRONTEND_URL || "")
   .split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
+const allowedOrigins = [...new Set([...DEFAULT_ALLOWED_ORIGINS, ...configuredOrigins])];
 
 const loadOptionalRoute = (routePath, serviceName) => {
   try {
@@ -44,20 +52,29 @@ const loadOptionalRoute = (routePath, serviceName) => {
 const prescriptionRoutes = loadOptionalRoute("./routes/prescriptionRoutes", "prescription");
 
 // Middleware
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      return callback(null, true);
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      console.warn(`Blocked by CORS: ${origin}`);
+      return callback(null, false);
+    },
+    credentials: true,
+    optionsSuccessStatus: 204
+  })
+);
+
+app.use(
+  express.json({
+    verify: (req, res, buffer) => {
+      req.rawBody = buffer;
     }
-
-    return callback(new Error("Not allowed by CORS"));
-  },
-  credentials: true
-}));
-
-app.use(express.json());
+  })
+);
 app.use(express.urlencoded({ extended: true }));
-
 // Static files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -84,6 +101,7 @@ if (prescriptionRoutes) {
 app.use("/api/doctors", doctorRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/whatsapp", whatsappRoutes);
+app.use("/api/meta", whatsappRoutes);
 app.use("/api/invoices", invoiceRoutes);
 app.use("/api/inventory", inventoryRoutes);
 app.use("/api/analytics", analyticsRoutes);
@@ -108,8 +126,14 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
+let serverInstance = null;
+
 const startServer = async () => {
-  app.listen(PORT, () => {
+  if (serverInstance) {
+    return serverInstance;
+  }
+
+  serverInstance = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
 
@@ -120,10 +144,10 @@ const startServer = async () => {
   } catch (error) {
     console.error(`Server started, but database connection failed:\n${error.message}`);
   }
+
+  return serverInstance;
 };
 
-if (require.main === module) {
-  startServer();
-}
+startServer();
 
-module.exports = { app, startServer };
+module.exports = { app, startServer, serverInstance };
